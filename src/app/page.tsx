@@ -1,62 +1,53 @@
-import { getPhotosCached, getPhotosCountCached } from '@/cache';
-import AnimateItems from '@/components/AnimateItems';
-import MorePhotos from '@/photo/MorePhotos';
-import SiteGrid from '@/components/SiteGrid';
-import { generateOgImageMetaForPhotos } from '@/photo';
-import PhotoLarge from '@/photo/PhotoLarge';
-import PhotosEmptyState from '@/photo/PhotosEmptyState';
-import {
-  PaginationParams,
-  getPaginationForSearchParams,
-} from '@/site/pagination';
-import { pathForRoot } from '@/site/paths';
-import { Metadata } from 'next';
-import { MAX_PHOTOS_TO_SHOW_OG } from '@/photo/image-response';
+import { clsx } from 'clsx/lite';
 
-export const runtime = 'edge';
-
-export async function generateMetadata(): Promise<Metadata> {
-  // Make homepage queries resilient to error on first time setup
-  const photos = await getPhotosCached({ limit: MAX_PHOTOS_TO_SHOW_OG })
-    .catch(() => []);
-  return generateOgImageMetaForPhotos(photos);
-}
-
-export default async function HomePage({ searchParams }: PaginationParams) {
-  const { offset, limit } = getPaginationForSearchParams(searchParams, 12);
-
-  const [
-    photos,
-    count,
-  ] = await Promise.all([
-    // Make homepage queries resilient to error on first time setup
-    getPhotosCached({ limit }).catch(() => []),
-    getPhotosCountCached().catch(() => 0),
-  ]);
-  
-  const showMorePhotos = count > photos.length;
-
+export default function LandingPage() {
   return (
-    photos.length > 0
-      ? <div className="space-y-4">
-        <AnimateItems
-          className="space-y-1"
-          duration={0.7}
-          staggerDelay={0.15}
-          distanceOffset={0}
-          staggerOnFirstLoadOnly
-          items={photos.map((photo, index) =>
-            <PhotoLarge
-              key={photo.id}
-              photo={photo}
-              priority={index <= 1}
-            />)}
-        />
-        {showMorePhotos &&
-          <SiteGrid
-            contentMain={<MorePhotos path={pathForRoot(offset + 1)} />}
-          />}
+    <div
+      className="flex flex-col items-center justify-center text-center"
+      style={{ minHeight: '60vh' }}
+    >
+      <h1 className="text-4xl font-bold tracking-wide">mattdav.is</h1>
+      <p className="max-w-prose">
+        Welcome to my corner of the internet where I share photos and code.
+      </p>
+      <div className="flex gap-4 flex-wrap justify-center">
+        <a
+          href="/photos"
+          className={clsx(
+            'px-4 py-2 border rounded hover:bg-gray-50',
+            'dark:hover:bg-gray-900',
+          )}
+        >
+          Photography
+        </a>
+        <a
+          href="/projects"
+          className={clsx(
+            'px-4 py-2 border rounded hover:bg-gray-50',
+            'dark:hover:bg-gray-900',
+          )}
+        >
+          Projects
+        </a>
+        <a
+          href="/blog"
+          className={clsx(
+            'px-4 py-2 border rounded hover:bg-gray-50',
+            'dark:hover:bg-gray-900',
+          )}
+        >
+          Blog
+        </a>
+        <a
+          href="/contact"
+          className={clsx(
+            'px-4 py-2 border rounded hover:bg-gray-50',
+            'dark:hover:bg-gray-900',
+          )}
+        >
+          Contact
+        </a>
       </div>
-      : <PhotosEmptyState />
+    </div>
   );
 }
