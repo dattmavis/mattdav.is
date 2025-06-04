@@ -3,11 +3,13 @@ import {
   getBlobUploadUrlsNoStore,
   getPhotosCountIncludingHiddenCached,
   getUniqueTagsCached,
+  getPostsCached,
 } from '@/cache';
 import {
   PATH_ADMIN_PHOTOS,
   PATH_ADMIN_TAGS,
   PATH_ADMIN_UPLOADS,
+  PATH_ADMIN_POSTS,
 } from '@/site/paths';
 
 export default async function AdminLayout({
@@ -19,10 +21,12 @@ export default async function AdminLayout({
     countPhotos,
     countUploads,
     countTags,
+    countPosts,
   ] = await Promise.all([
     getPhotosCountIncludingHiddenCached(),
     getBlobUploadUrlsNoStore().then(urls => urls.length),
     getUniqueTagsCached().then(tags => tags.length),
+    getPostsCached().then(posts => posts.length),
   ]);
 
   const navItemPhotos = {
@@ -43,10 +47,17 @@ export default async function AdminLayout({
     count: countTags,
   };
 
+  const navItemPosts = {
+    label: 'Posts',
+    href: PATH_ADMIN_POSTS,
+    count: countPosts,
+  };
+
   const navItems = [navItemPhotos];
 
   if (countUploads > 0) { navItems.push(navItemUploads); }
   if (countTags > 0) { navItems.push(navItemTags); }
+  navItems.push(navItemPosts);
 
   return (
     <div className="mt-4 space-y-5">
