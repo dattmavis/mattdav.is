@@ -17,6 +17,7 @@ import {
   isPathTagPhoto,
   isPathTagPhotoShare,
   isPathTagShare,
+  isPathPhotoApp,
 } from '@/site/paths';
 import { getCameraFromKey } from '@/camera';
 
@@ -30,6 +31,8 @@ const SHARE           = 'share';
 const PATH_ROOT                         = '/';
 const PATH_GRID                         = '/grid';
 const PATH_ADMIN                        = '/admin/photos';
+const PATH_PROJECTS                     = '/projects';
+const PATH_PHOTOS                       = '/photos';
 
 const PATH_PHOTO                        = `/p/${PHOTO_ID}`;
 const PATH_PHOTO_SHARE                  = `${PATH_PHOTO}/${SHARE}`;
@@ -156,5 +159,12 @@ describe('Paths', () => {
     expect(getEscapePath(PATH_FILM_SIMULATION_SHARE)).toEqual(PATH_FILM_SIMULATION);
     expect(getEscapePath(PATH_FILM_SIMULATION_PHOTO)).toEqual(PATH_FILM_SIMULATION);
     expect(getEscapePath(PATH_FILM_SIMULATION_PHOTO_SHARE)).toEqual(PATH_FILM_SIMULATION_PHOTO);
+  });
+
+  it('identifies photo app paths', () => {
+    expect(isPathPhotoApp(PATH_PHOTOS)).toBe(true);
+    expect(isPathPhotoApp(PATH_GRID)).toBe(true);
+    expect(isPathPhotoApp(PATH_ADMIN)).toBe(true);
+    expect(isPathPhotoApp(PATH_PROJECTS)).toBe(false);
   });
 });

@@ -14,6 +14,7 @@ import {
   isPathProtected,
   isPathSets,
   isPathSignIn,
+  isPathPhotoApp,
 } from '@/site/paths';
 import AnimateItems from '../components/AnimateItems';
 
@@ -27,6 +28,7 @@ export default function NavClient({
   const showNav = !isPathSignIn(pathname);
 
   const shouldAnimate = !isPathAdmin(pathname);
+  const showViewSwitcher = isPathPhotoApp(pathname);
 
   const renderLink = (
     text: string,
@@ -63,12 +65,12 @@ export default function NavClient({
                 'w-full min-h-[4rem]',
                 'leading-none',
               )}>
-              <div className="flex flex-grow items-center gap-4">
+              {showViewSwitcher && <div className="flex flex-grow items-center gap-4">
                 <ViewSwitcher
                   currentSelection={switcherSelectionForPath()}
                   showAdmin={showAdmin}
                 />
-              </div>
+              </div>}
               <div className="hidden xs:flex gap-4 items-center">
                 {renderLink(SITE_DOMAIN_OR_TITLE, PATH_HOME)}
                 {renderLink('Photos', '/photos')}
