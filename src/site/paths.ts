@@ -250,6 +250,24 @@ export const isPathAdminConfiguration = (pathname?: string) =>
 export const isPathProtected = (pathname?: string) =>
   checkPathPrefix(pathname, PATH_ADMIN);
 
+export const isPathPhotoApp = (pathname?: string) =>
+  [PATH_ROOT, PATH_GRID, PATH_SETS].some(p => checkPathPrefix(pathname, p)) ||
+  isPathPhoto(pathname) ||
+  isPathPhotoShare(pathname) ||
+  isPathTag(pathname) ||
+  isPathTagShare(pathname) ||
+  isPathTagPhoto(pathname) ||
+  isPathTagPhotoShare(pathname) ||
+  isPathCamera(pathname) ||
+  isPathCameraShare(pathname) ||
+  isPathCameraPhoto(pathname) ||
+  isPathCameraPhotoShare(pathname) ||
+  isPathFilmSimulation(pathname) ||
+  isPathFilmSimulationShare(pathname) ||
+  isPathFilmSimulationPhoto(pathname) ||
+  isPathFilmSimulationPhotoShare(pathname) ||
+  isPathProtected(pathname);
+
 export const getPathComponents = (pathname = ''): {
   photoId?: string
   tag?: string
