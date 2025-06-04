@@ -18,6 +18,12 @@ Features
 - Automatic OG image generation
 - Support for Fujifilm simulations
 
+Additional Features
+-------------------
+- Landing page with links to Photos, Blog, Projects, and Contact
+- Blog and Projects pages backed by a Posts database
+- Admin interface to create and manage posts
+
 <img src="/readme/og-image-share.png" alt="OG Image Preview" width=600 />
 
 Installation
