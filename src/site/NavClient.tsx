@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import SiteGrid from '../components/SiteGrid';
 import { SITE_DOMAIN_OR_TITLE } from '@/site/config';
+import { PATH_HOME } from '@/site/paths';
 import ViewSwitcher, { SwitcherSelection } from '@/site/ViewSwitcher';
 import {
   PATH_ROOT,
@@ -68,8 +69,12 @@ export default function NavClient({
                   showAdmin={showAdmin}
                 />
               </div>
-              <div className="hidden xs:block">
-                {renderLink(SITE_DOMAIN_OR_TITLE, PATH_ROOT)}
+              <div className="hidden xs:flex gap-4 items-center">
+                {renderLink(SITE_DOMAIN_OR_TITLE, PATH_HOME)}
+                {renderLink('Photos', '/photos')}
+                {renderLink('Projects', '/projects')}
+                {renderLink('Blog', '/blog')}
+                {renderLink('Contact', '/contact')}
               </div>
             </div>]
             : []}

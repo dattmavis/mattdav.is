@@ -7,6 +7,7 @@ import {
   Photo,
   PhotoDateRange,
 } from '@/photo';
+import { PostDb, PostDbInsert, parsePostFromDb } from '@/post';
 import { Camera, Cameras, createCameraKey } from '@/camera';
 import { parameterize } from '@/utility/string';
 import { Tags } from '@/tag';
@@ -14,6 +15,27 @@ import { FilmSimulation, FilmSimulations } from '@/simulation';
 import { PRIORITY_ORDER_ENABLED } from '@/site/config';
 
 const PHOTO_DEFAULT_LIMIT = 100;
+
+// Posts
+const sqlCreatePostsTable = () =>
+  sql`
+    CREATE TABLE IF NOT EXISTS posts (
+      id VARCHAR(8) PRIMARY KEY,
+      title VARCHAR(255) NOT NULL,
+      content TEXT NOT NULL,
+      project BOOLEAN,
+      created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    )
+  `;
+
+export const sqlInsertPost = (post: PostDbInsert) =>
+  sql`
+    INSERT INTO posts (id, title, content, project)
+    VALUES (${post.id}, ${post.title}, ${post.content}, ${post.project})
+  `;
+
+const sqlGetPosts = () =>
+  sql<PostDb>`SELECT * FROM posts ORDER BY created_at DESC`;
 
 export const convertArrayToPostgresString = (array?: string[]) => array
   ? `{${array.join(',')}}`
@@ -304,6 +326,23 @@ const safelyQueryPhotos = async <T>(callback: () => Promise<T>): Promise<T> => {
   return result;
 };
 
+const safelyQueryPosts = async <T>(callback: () => Promise<T>): Promise<T> => {
+  let result: T;
+  try {
+    result = await callback();
+  } catch (e: any) {
+    if (/relation "posts" does not exist/i.test(e.message)) {
+      console.log('Creating table "posts" because it did not exist');
+      await sqlCreatePostsTable();
+      result = await callback();
+    } else {
+      console.log(`sql get error: ${e.message} `);
+      throw e;
+    }
+  }
+  return result;
+};
+
 export const getPhotos = async (options: GetPhotosOptions = {}) => {
   const {
     sortBy = PRIORITY_ORDER_ENABLED ? 'priority' : 'takenAt',
@@ -447,3 +486,11 @@ export const getPhotosFilmSimulationDateRange =
     sqlGetPhotosFilmSimulationDateRange(simulation));
 export const getPhotosFilmSimulationCount = (simulation: FilmSimulation) =>
   safelyQueryPhotos(() => sqlGetPhotosFilmSimulationCount(simulation));
+
+export const getPosts = async (project?: boolean) => {
+  const query = project === undefined
+    ? sqlGetPosts()
+    : sql<PostDb>`SELECT * FROM posts WHERE project = ${project} ORDER BY created_at DESC`;
+  return safelyQueryPosts(() => query)
+    .then(({ rows }) => rows.map(parsePostFromDb));
+};

@@ -22,6 +22,7 @@ import {
   getPhotosFilmSimulationCount,
   getPhotosDateRange,
   getPhotosNearId,
+  getPosts,
 } from '@/services/vercel-postgres';
 import { parseCachedPhotoDates, parseCachedPhotosDates } from '@/photo';
 import { getBlobPhotoUrls, getBlobUploadUrls } from '@/services/blob';
@@ -208,6 +209,13 @@ export const getUniqueFilmSimulationsCached =
     getUniqueFilmSimulations,
     [KEY_PHOTOS, KEY_FILM_SIMULATIONS],
   );
+
+export const getPostsCached = (
+  project?: boolean,
+) => unstable_cache(
+  getPosts,
+  ['posts', project === undefined ? 'all' : project ? 'project' : 'nonproject']
+)(project);
 
 export const authCached = cache(auth);
 
