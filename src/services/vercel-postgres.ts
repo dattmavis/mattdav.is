@@ -514,6 +514,7 @@ export const getPosts = async (project?: boolean) => {
         WHERE project = ${project}
         ORDER BY created_at DESC
       `;
+      
   return safelyQueryPosts(() => query)
     .then(({ rows }) => rows.map(parsePostFromDb));
 };

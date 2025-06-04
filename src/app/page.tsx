@@ -3,7 +3,7 @@ import { clsx } from 'clsx/lite';
 export default function LandingPage() {
   return (
     <div
-      className="flex flex-col items-center justify-center text-center"
+      className="flex flex-col items-center justify-center text-center gap-6"
       style={{ minHeight: '60vh' }}
     >
       <h1 className="text-4xl font-bold tracking-wide">mattdav.is</h1>
@@ -15,7 +15,7 @@ export default function LandingPage() {
           href="/photos"
           className={clsx(
             'px-4 py-2 border rounded hover:bg-gray-50',
-            'dark:hover:bg-gray-900',
+            'dark:hover:bg-gray-900'
           )}
         >
           Photography
@@ -24,7 +24,7 @@ export default function LandingPage() {
           href="/projects"
           className={clsx(
             'px-4 py-2 border rounded hover:bg-gray-50',
-            'dark:hover:bg-gray-900',
+            'dark:hover:bg-gray-900'
           )}
         >
           Projects
@@ -33,7 +33,7 @@ export default function LandingPage() {
           href="/blog"
           className={clsx(
             'px-4 py-2 border rounded hover:bg-gray-50',
-            'dark:hover:bg-gray-900',
+            'dark:hover:bg-gray-900'
           )}
         >
           Blog
@@ -42,7 +42,7 @@ export default function LandingPage() {
           href="/contact"
           className={clsx(
             'px-4 py-2 border rounded hover:bg-gray-50',
-            'dark:hover:bg-gray-900',
+            'dark:hover:bg-gray-900'
           )}
         >
           Contact
