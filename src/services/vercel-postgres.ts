@@ -312,6 +312,12 @@ const safelyQueryPhotos = async <T>(callback: () => Promise<T>): Promise<T> => {
       console.log('Adding column "hidden" because it did not exist');
       await db.query('ALTER TABLE photos ADD COLUMN hidden BOOLEAN');
       result = await callback();
+    } else if (/column "extension" does not exist/i.test(e.message)) {
+      console.log('Adding column "extension" because it did not exist');
+      await db.query(
+        "ALTER TABLE photos ADD COLUMN extension VARCHAR(255) NOT NULL DEFAULT 'jpg'"
+      );
+      result = await callback();
     } else if (/column "taken_at_naive" does not exist/i.test(e.message)) {
       console.log('Adding column "taken_at_naive" because it did not exist');
       await db.query('ALTER TABLE photos ADD COLUMN taken_at_naive VARCHAR(255)');
