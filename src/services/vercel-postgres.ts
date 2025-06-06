@@ -308,24 +308,24 @@ const safelyQueryPhotos = async <T>(callback: () => Promise<T>): Promise<T> => {
       console.log('Creating table "photos" because it did not exist');
       await sqlCreatePhotosTable();
       result = await callback();
-    } else if (/column "hidden" does not exist/i.test(e.message)) {
+    } else if (/column "hidden".*does not exist/i.test(e.message)) {
       console.log('Adding column "hidden" because it did not exist');
       await db.query('ALTER TABLE photos ADD COLUMN hidden BOOLEAN');
       result = await callback();
-    } else if (/column "extension" does not exist/i.test(e.message)) {
+    } else if (/column "extension".*does not exist/i.test(e.message)) {
       console.log('Adding column "extension" because it did not exist');
       await db.query(
         "ALTER TABLE photos ADD COLUMN extension VARCHAR(255) NOT NULL DEFAULT 'jpg'"
       );
       result = await callback();
-    } else if (/column "taken_at_naive" does not exist/i.test(e.message)) {
+    } else if (/column "taken_at_naive".*does not exist/i.test(e.message)) {
       console.log('Adding column "taken_at_naive" because it did not exist');
       await db.query('ALTER TABLE photos ADD COLUMN taken_at_naive VARCHAR(255)');
       await db.query(
         "UPDATE photos SET taken_at_naive = to_char(taken_at AT TIME ZONE 'UTC', 'YYYY-MM-DD HH24:MI:SS') WHERE taken_at_naive IS NULL"
       );
       result = await callback();
-    } else if (/column "created_at" does not exist/i.test(e.message)) {
+    } else if (/column "created_at".*does not exist/i.test(e.message)) {
       console.log('Adding column "created_at" because it did not exist');
       await db.query('ALTER TABLE photos ADD COLUMN created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP');
       result = await callback();
