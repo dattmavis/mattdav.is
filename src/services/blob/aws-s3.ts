@@ -57,18 +57,18 @@ export const awsS3Copy = async (
   fileNameDestination: string,
   addRandomSuffix?: boolean,
 ) => {
-  const name = fileNameSource.split('.')[0];
-  const extension = fileNameSource.split('.')[1];
+  const destName = fileNameDestination.split('.')[0];
+  const destExtension = fileNameDestination.split('.')[1] || fileNameSource.split('.')[1];
   const Key = addRandomSuffix
-    ? `${name}-${generateBlobId()}.${extension}`
+    ? `${destName}-${generateBlobId()}.${destExtension}`
     : fileNameDestination;
   return awsS3Client().send(new CopyObjectCommand({
     Bucket: AWS_S3_BUCKET,
-    CopySource: fileNameSource,
+    CopySource: `${AWS_S3_BUCKET}/${fileNameSource}`,
     Key,
     ACL: 'public-read',
   }))
-    .then(() => urlForKey(fileNameDestination));
+    .then(() => urlForKey(Key));
 };
 
 export const awsS3Delete = async (Key: string) => {

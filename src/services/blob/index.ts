@@ -64,7 +64,7 @@ export const convertUploadToPhoto = async (
   const useAwsS3 = HAS_AWS_S3_STORAGE && isUrlFromAwsS3(uploadUrl);
 
   const url = await (useAwsS3
-    ? awsS3Copy(uploadUrl, photoUrl, photoId === undefined)
+    ? awsS3Copy(fileNameForBlobUrl(uploadUrl), photoUrl, photoId === undefined)
     : vercelBlobCopy(uploadUrl, photoUrl, photoId === undefined));
 
   if (url) {
